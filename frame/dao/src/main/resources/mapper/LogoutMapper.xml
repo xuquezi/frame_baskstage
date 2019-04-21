@@ -18,7 +18,7 @@
         FROM frame_logout flo
         WHERE 1 = 1
         <if test="logoutName != null and logoutName!= ''" >
-            and flo.logout_name '%${logoutName}%'
+            and flo.logout_name like '%${logoutName}%'
         </if>
         ORDER BY flo.logout_time DESC
         Limit #{start},#{pageSize}
@@ -29,7 +29,7 @@
         FROM frame_logout flo
         WHERE 1 = 1
         <if test="logoutName != null and logoutName!= ''" >
-            and flo.logout_name '%${logoutName}%'
+            and flo.logout_name like '%${logoutName}%'
         </if>
     </select>
 </mapper>

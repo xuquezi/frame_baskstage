@@ -1,5 +1,6 @@
 package com.example.admin.controller;
 
+import annotation.SysLog;
 import com.example.admin.config.exception.NotActivatedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +44,7 @@ public class UserController extends BaseController {
      * @param user
      * @return
      */
-    @PostMapping("/login")
+    @RequestMapping("/login")
     @ResponseBody
     public ResponseResult login(@RequestBody FrameUser user, HttpServletRequest request){
         String username = user.getUserName();
@@ -89,7 +90,7 @@ public class UserController extends BaseController {
      * @param token
      * @return
      */
-    @GetMapping("/getRoles")
+    @RequestMapping("/getRoles")
     @ResponseBody
     public RoleResult getStaffInfo(String token,HttpServletRequest request) throws IOException {
         Integer id = JWTUtil.getId(token);
@@ -114,7 +115,7 @@ public class UserController extends BaseController {
      * 登出方法
      * @return
      */
-    @PostMapping("/logout")
+    @RequestMapping("/logout")
     @ResponseBody
     public ResponseResult logout(HttpServletRequest request) throws IOException {
         String token = request.getHeader(FrameConstant.LOGIN_SIGN);
@@ -138,7 +139,8 @@ public class UserController extends BaseController {
     }
 
     @ResponseBody
-    @GetMapping("/page")
+    @RequestMapping("/page")
+    @SysLog
     public PageResult findUserList(@RequestParam(name = "search",defaultValue = "")String userName, @RequestParam(value = "limit") Integer pageSize, @RequestParam(value = "page")Integer pageNum){
         log.info("当前页为："+ pageNum);
         log.info("每页显示记录数："+ pageSize);
@@ -149,8 +151,9 @@ public class UserController extends BaseController {
 
     }
 
-    @PostMapping("/stopAndUse")
+    @RequestMapping("/stopAndUse")
     @ResponseBody
+    @SysLog
     public ResponseResult stopAndUseUser(@RequestBody FrameUser user){
         int i = userService.stopAndUseUser(user.getUserId(),user.getUserStatus());
         if(i>0){
@@ -159,8 +162,9 @@ public class UserController extends BaseController {
             throw new RuntimeException();
         }
     }
-    @PostMapping("/update")
+    @RequestMapping("/update")
     @ResponseBody
+    @SysLog
     public ResponseResult update(@RequestBody FrameUser user,HttpServletRequest request){
         if(user.getRoleArray().length < 1){
             //控制用户下必须有权限角色

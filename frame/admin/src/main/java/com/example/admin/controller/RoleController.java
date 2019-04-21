@@ -1,5 +1,6 @@
 package com.example.admin.controller;
 
+import annotation.SysLog;
 import constant.FrameConstant;
 import entity.FrameRole;
 import entity.ListResult;
@@ -8,7 +9,6 @@ import entity.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,8 +26,9 @@ public class RoleController extends BaseController {
     /**
      * 获取所有角色
      */
-    @GetMapping("/list")
+    @RequestMapping("/list")
     @ResponseBody
+    @SysLog
     public ListResult getRoles(){
 
         List<FrameRole> list = roleService.getRoles();
@@ -36,7 +37,8 @@ public class RoleController extends BaseController {
 
 
     @ResponseBody
-    @GetMapping("/page")
+    @RequestMapping("/page")
+    @SysLog
     public PageResult findRoleList(@RequestParam(name = "search",defaultValue = "")String roleName, @RequestParam(value = "limit") Integer pageSize, @RequestParam(value = "page")Integer pageNum){
         log.info("当前页为："+ pageNum);
         log.info("每页显示记录数："+ pageSize);
