@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.AuthMapper">
+    <resultMap id="BaseResultMap" type="entity.FrameAuth">
+        <id column="auth_id" property="authId" jdbcType="INTEGER"></id>
+        <result column="auth_name" property="authName" jdbcType="VARCHAR"></result>
+        <result column="auth_desc" property="authDesc" jdbcType="VARCHAR"></result>
+        <result column="auth_delete" property="authDelete" jdbcType="INTEGER"></result>
+        <result column="auth_create" property="authCreate" jdbcType="TIMESTAMP"></result>
+        <result column="auth_create_name" property="authCreateName" jdbcType="VARCHAR"></result>
+        <result column="auth_update" property="authUpdate" jdbcType="TIMESTAMP"></result>
+        <result column="auth_update_name" property="authUpdateName" jdbcType="VARCHAR"></result>
+        <result column="auth_status" property="authStatus" jdbcType="INTEGER"></result>
+    </resultMap>
+
+    <select id="findAuthListByRoleId" resultMap="BaseResultMap">
+        SELECT fa.auth_name,fa.auth_id
+        FROM frame_auth fa,frame_role_auth fra
+        WHERE fa.auth_id = fra.auth_id
+        AND fra.role_id = #{roleId}
+        AND fa.auth_delete = 0
+    </select>
+
+    <select id="getAuths" resultMap="BaseResultMap">
+        SELECT fa.auth_name,fa.auth_id
+        FROM frame_auth fa
+        WHERE fa.auth_status = 0
+        AND  fa.auth_delete = 0
+    </select>
+</mapper>

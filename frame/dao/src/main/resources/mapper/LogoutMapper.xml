@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.LogoutMapper">
+    <resultMap id="BaseResultMap" type="entity.FrameLogout">
+        <id column="logout_id" property="logoutId" jdbcType="INTEGER"></id>
+        <result column="logout_name" property="logoutName" jdbcType="VARCHAR"></result>
+        <result column="logout_ip" property="logoutIp" jdbcType="VARCHAR"></result>
+        <result column="logout_time" property="logoutTime" jdbcType="TIMESTAMP"></result>
+    </resultMap>
+
+    <insert id="saveLogoutLog" parameterType="entity.FrameLogout">
+         INSERT INTO frame_logout (logout_id,logout_name,logout_ip,logout_time)
+        VALUES (#{logoutId},#{logoutName},#{logoutIp},#{logoutTime})
+    </insert>
+
+    <select id="selectLogoutLogList" resultMap="BaseResultMap">
+        SELECT flo.logout_time,flo.logout_id,flo.logout_name,flo.logout_ip
+        FROM frame_logout flo
+        WHERE 1 = 1
+        <if test="logoutName != null and logoutName!= ''" >
+            and flo.logout_name '%${logoutName}%'
+        </if>
+        ORDER BY flo.logout_time DESC
+        Limit #{start},#{pageSize}
+    </select>
+
+    <select id="countLogoutLogList" resultType="Integer">
+        SELECT COUNT(1)
+        FROM frame_logout flo
+        WHERE 1 = 1
+        <if test="logoutName != null and logoutName!= ''" >
+            and flo.logout_name '%${logoutName}%'
+        </if>
+    </select>
+</mapper>

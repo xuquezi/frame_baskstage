@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.UserMapper">
+    <resultMap id="BaseResultMap" type="entity.FrameUser">
+        <id column="user_id" property="userId" jdbcType="INTEGER"></id>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"></result>
+        <result column="user_password" property="userPassword" jdbcType="VARCHAR"></result>
+        <result column="user_pic" property="userPic" jdbcType="VARCHAR"></result>
+        <result column="user_status" property="userStatus" jdbcType="INTEGER"></result>
+        <result column="user_email" property="userEmail" jdbcType="VARCHAR"></result>
+        <result column="user_mobile" property="userMobile" jdbcType="VARCHAR"></result>
+        <result column="user_delete" property="userDelete" jdbcType="INTEGER"></result>
+        <result column="user_create" property="userCreate" jdbcType="TIMESTAMP"></result>
+        <result column="user_create_name" property="userCreateName" jdbcType="VARCHAR"></result>
+        <result column="user_update" property="userUpdate" jdbcType="TIMESTAMP"></result>
+        <result column="user_update_name" property="userUpdateName" jdbcType="VARCHAR"></result>
+        <!-- 多對多的关系映射-->
+        <collection property="roles" ofType="entity.FrameRole">
+            <id property="roleId" column="role_id" jdbcType="INTEGER"></id>
+            <result property="roleDelete" column="role_delete" jdbcType="INTEGER"></result>
+            <result property="roleDesc" column="role_desc" jdbcType="VARCHAR"></result>
+            <result property="roleName" column="role_name" jdbcType="VARCHAR"></result>
+            <result property="roleCreate" column="role_create" jdbcType="TIMESTAMP"></result>
+            <result property="roleCreateName" column="role_create_name" jdbcType="VARCHAR"></result>
+            <result property="roleUpdate" column="role_update" jdbcType="TIMESTAMP"></result>
+            <result property="roleUpdateName" column="role_update_name" jdbcType="VARCHAR"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findUserByUsername" resultMap="BaseResultMap">
+        SELECT fu.user_id,fu.user_name,fu.user_password,fu.user_status,
+        fu.user_pic,fu.user_mobile,fu.user_email,fu.user_create,
+        fu.user_create_name,fu.user_delete,fu.user_update,fu.user_update_name
+        FROM frame_user fu
+        where fu.user_delete = 0
+        and fu.user_name = #{username}
+    </select>
+
+    <select id="selectUserList" resultMap="BaseResultMap">
+        SELECT fu.user_id,fu.user_name,fu.user_create,fu.user_create_name,
+        fu.user_update,fu.user_update_name,fu.user_email,fu.user_mobile,
+        fu.user_pic,fu.user_status,fu.user_update_name
+        ,fr.role_id,fr.role_name,
+        fr.role_desc
+        FROM
+        (SELECT * from frame_user f
+        WHERE 1 = 1
+        <if test="userName != null and userName!= ''" >
+            and f.user_name like '%${userName}%'
+        </if>
+        and f.user_delete = 0
+        limit #{start},#{pageSize}) fu,frame_user_role fur,frame_role fr
+        where fu.user_id = fur.user_id
+        and fur.role_id = fr.role_id
+        and fr.role_delete = 0
+        and fr.role_status = 0
+    </select>
+
+    <select id="countUserList" resultType="Integer">
+        SELECT COUNT(1)
+        FROM frame_user fu
+        WHERE 1 = 1
+        <if test="userName != null and userName!= ''" >
+            and fu.user_name like '%${userName}%'
+        </if>
+        and fu.user_delete = 0
+    </select>
+
+    <update id="stopUser">
+        UPDATE frame_user
+        SET user_status = 1
+        where user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <update id="useUser">
+        UPDATE frame_user
+        SET user_status = 0
+        where user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateUser" parameterType="entity.FrameUser">
+        UPDATE frame_user SET
+        user_name = #{userName,jdbcType=VARCHAR},
+        user_email = #{userEmail,jdbcType=VARCHAR},
+        user_mobile = #{userMobile,jdbcType=INTEGER},
+        user_update_name = #{userUpdateName,jdbcType=VARCHAR},
+        user_update = #{userUpdate, jdbcType=TIMESTAMP}
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.LoginMapper">
+    <resultMap id="BaseResultMap" type="entity.FrameLogin">
+        <id column="login_id" property="loginId" jdbcType="INTEGER"></id>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"></result>
+        <result column="login_ip" property="loginIp" jdbcType="VARCHAR"></result>
+        <result column="login_time" property="loginTime" jdbcType="TIMESTAMP"></result>
+    </resultMap>
+
+    <insert id="saveLoginLog" parameterType="entity.FrameLogin">
+        INSERT INTO frame_login (login_id,login_name,login_ip,login_time)
+        VALUES (#{loginId},#{loginName},#{loginIp},#{loginTime})
+    </insert>
+
+    <select id="selectLoginLogList" resultMap="BaseResultMap">
+        SELECT fl.login_id,fl.login_ip,fl.login_name,fl.login_time
+        FROM frame_login fl
+        WHERE 1 = 1
+        <if test="loginName != null and loginName!= ''" >
+            and fl.login_name like '%${loginName}%'
+        </if>
+        ORDER BY fl.login_time DESC
+        Limit #{start},#{pageSize}
+    </select>
+
+    <select id="countLoginLogList" resultType="Integer">
+        SELECT COUNT(1)
+        FROM frame_login fl
+        WHERE 1 = 1
+        <if test="loginName != null and loginName!= ''" >
+            and fl.login_name like '%${loginName}%'
+        </if>
+    </select>
+</mapper>

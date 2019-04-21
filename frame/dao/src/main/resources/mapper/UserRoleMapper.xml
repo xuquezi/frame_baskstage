@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.UserRoleMapper">
+    <resultMap id="BaseResultMap" type="entity.FrameUserRole">
+        <id column="user_role_id" property="userRoleId" jdbcType="INTEGER"></id>
+        <result column="user_id" property="userId" jdbcType="INTEGER"></result>
+        <result column="role_id" property="roleId" jdbcType="INTEGER"></result>
+    </resultMap>
+    <delete id="deleteRolesByUserId">
+        DELETE FROM frame_user_role
+        WHERE user_id = #{userId}
+    </delete>
+
+    <insert id="insertRoles">
+        INSERT  into frame_user_role (user_id,role_id)
+        VALUES (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
+    </insert>
+</mapper>
