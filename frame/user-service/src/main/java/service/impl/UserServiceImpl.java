@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
             //且判断用户下角色不为空
             int count = roleMapper.findRoleIsDeleteOrStopByUserId(userId);
             if(count>0){
-                throw new RuntimeException("用户下有用或者删除角色，要先恢复或者启用用户下角色");
+                throw new RuntimeException("用户下有停用或者删除角色，要先恢复或者启用用户下角色");
             }
             //判断用户下角色不为空,为空的话抛出异常
             int countUserRole = roleMapper.countUserRoleByUserId(userId);
